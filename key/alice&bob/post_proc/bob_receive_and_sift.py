@@ -1,4 +1,4 @@
-def bob_receive_and_sift(bob, bob_measured, sender):
+def bob_receive_and_sift(bob, bob_measured, sender, results):
     n = len(bob_measured)
     keep = [False] * n
 
@@ -22,4 +22,7 @@ def bob_receive_and_sift(bob, bob_measured, sender):
             if len(seen) == n:
                 break
 
-    return [bit for bit, k in zip(bob_measured, keep) if k]
+    res = [bit for bit, k in zip(bob_measured, keep) if k]
+    for b in res:
+        results.append(b)
+    return res

@@ -26,18 +26,20 @@ def main():
     network.add_hosts([alice, bob])
 
     raw_len = 100
+    results_alice = []
+    results_bob = []
 
     def alice_protocol():
         alice_key, alice_bases = alice_transmit(alice, raw_len, 'Bob')
         keep = alice_receive_basis(alice, alice_bases, 'Bob')
-        sifted_key = alice_sift(alice_key, keep)
+        sifted_key = alice_sift(alice_key, keep, results_alice)
 
         print("Alice sifted key:", sifted_key)
 
     def bob_protocol():
-        bob_results, bob_bases = bob_receive(bob, raw_len, 'Alice')
+        bob_raw, bob_bases = bob_receive(bob, raw_len, 'Alice')
         bob_transmit_basis(bob, bob_bases, 'Alice')
-        sifted_key = bob_receive_and_sift(bob, bob_results, 'Alice')
+        sifted_key = bob_receive_and_sift(bob, bob_raw, 'Alice', results_bob)
 
         print("Bob sifted key:  ", sifted_key)
 
@@ -64,7 +66,10 @@ def main():
     # Stop and reset the network singleton
     network.stop(True)   # or network.stop()
 
-    return end - start
+    if results_alice != results_bob:
+        return 'Key mismatch - try again' # automate this in future
+
+    return f"Successful key transition: {len(results_alice)} bits at secure rate of {len(results_alice) / (end - start)} bits per second."
 
 if __name__ == "__main__":
     print(main())
