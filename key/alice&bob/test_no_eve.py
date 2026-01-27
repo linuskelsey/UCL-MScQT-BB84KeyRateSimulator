@@ -1,4 +1,5 @@
 import threading
+import time
 
 from qunetsim.components import Host, Network
 
@@ -24,32 +25,39 @@ def main():
 
     network.add_hosts([alice, bob])
 
-    key_len = 100
+    raw_len = 100
+    results_alice = []
+    results_bob = []
 
     def alice_protocol():
-        alice_key, alice_bases = alice_transmit(alice, key_len, 'Bob')
+        alice_key, alice_bases = alice_transmit(alice, raw_len, 'Bob')
         keep = alice_receive_basis(alice, alice_bases, 'Bob')
-        sifted_key = alice_sift(alice_key, keep)
+        sifted_key = alice_sift(alice_key, keep, results_alice)
 
         print("Alice sifted key:", sifted_key)
 
     def bob_protocol():
-        bob_results, bob_bases = bob_receive(bob, key_len, 'Alice')
+        bob_raw, bob_bases = bob_receive(bob, raw_len, 'Alice')
         bob_transmit_basis(bob, bob_bases, 'Alice')
-        sifted_key = bob_receive_and_sift(bob, bob_results, 'Alice')
+        sifted_key = bob_receive_and_sift(bob, bob_raw, 'Alice', results_bob)
 
         print("Bob sifted key:  ", sifted_key)
 
     alice_thread = threading.Thread(target=alice_protocol)
     bob_thread = threading.Thread(target=bob_protocol)
 
+    # start timer before running threads
+    start = time.time()
+
     alice_thread.start()
-    import time
     time.sleep(0.1)  # give Alice a moment to queue qubits
     bob_thread.start()
 
     alice_thread.join()
     bob_thread.join()
+
+    # stop timer after running threads
+    end = time.time()
 
     # Stop hosts
     alice.stop()
@@ -58,5 +66,10 @@ def main():
     # Stop and reset the network singleton
     network.stop(True)   # or network.stop()
 
+    if results_alice != results_bob:
+        return 'Key mismatch - try again' # automate this in future
+
+    return f"Successful key transmission: {len(results_alice)} bits at secure rate of {len(results_alice) / (end - start)} bits per second."
+
 if __name__ == "__main__":
-    main()
+    print(main())
