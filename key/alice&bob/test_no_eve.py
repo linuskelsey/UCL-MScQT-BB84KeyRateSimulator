@@ -73,4 +73,6 @@ def test_no_eve():
 
     return f"Successful key transmission: {len(results_alice)} bits at secure rate of {len(results_alice) / (end - start)} bits per second."
 
-print(test_no_eve())
+# needed for multiprocessing
+if __name__ == "__main__":
+    print(test_no_eve())
