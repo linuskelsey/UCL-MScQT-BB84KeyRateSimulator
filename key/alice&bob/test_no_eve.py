@@ -69,7 +69,7 @@ def main():
     if results_alice != results_bob:
         return 'Key mismatch - try again' # automate this in future
 
-    return f"Successful key transition: {len(results_alice)} bits at secure rate of {len(results_alice) / (end - start)} bits per second."
+    return f"Successful key transmission: {len(results_alice)} bits at secure rate of {len(results_alice) / (end - start)} bits per second."
 
 if __name__ == "__main__":
     print(main())
