@@ -10,7 +10,7 @@ from post_proc.bob_receive_and_sift import bob_receive_and_sift
 from quantum.alice_transmit import alice_transmit
 from quantum.bob_receive import bob_receive
 
-def test_no_eve():
+def test_eve():
     network = Network.get_instance()
     network.start()
 
@@ -33,7 +33,7 @@ def test_no_eve():
         alice_key, alice_bases = alice_transmit(alice, raw_len, 'Bob')
         keep = alice_receive_basis(alice, alice_bases, 'Bob')
         sifted_key = alice_sift(alice_key, keep, results_alice)
-        # add error check stage here to make sure of no eavesdropper - test_eve.py
+        # add error check stage here to make sure of no eavesdropper
 
         print("Alice sifted key:", sifted_key)
 
@@ -41,7 +41,7 @@ def test_no_eve():
         bob_raw, bob_bases = bob_receive(bob, raw_len, 'Alice')
         bob_transmit_basis(bob, bob_bases, 'Alice')
         sifted_key = bob_receive_and_sift(bob, bob_raw, 'Alice', results_bob)
-        # add error check stage here to make sure of no eavesdropper - test_eve.py
+        # add error check stage here to make sure of no eavesdropper
 
         print("Bob sifted key:  ", sifted_key)
 
@@ -73,4 +73,4 @@ def test_no_eve():
 
     return f"Successful key transmission: {len(results_alice)} bits at secure rate of {len(results_alice) / (end - start)} bits per second."
 
-print(test_no_eve())
+print(test_eve())
