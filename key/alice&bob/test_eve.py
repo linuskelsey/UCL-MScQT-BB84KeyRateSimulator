@@ -37,11 +37,16 @@ def test_eve():
         keep = alice_receive_basis(alice, alice_bases, 'Bob')
         sifted_key = alice_sift(alice_key, keep, res_a)
 
-        a_err = alice_error_check(alice, res_a, 'Bob')
-        if a_err:
+        try:
+            a_err = alice_error_check(alice, res_a, 'Bob')
+        except Exception as e:
+            print(f"[Alice] Error check crashed: {e}")
             abort['value'] = True
             return
         
+        if a_err:
+            abort['value'] = True
+            return
         print("Alice sifted key:", sifted_key)
 
     def bob_protocol():
@@ -49,11 +54,19 @@ def test_eve():
         bob_transmit_basis(bob, bob_bases, 'Alice')
         sifted_key = bob_receive_and_sift(bob, bob_raw, 'Alice', res_b)
 
-        b_err = bob_error_check(bob, res_b, 'Alice')
-        if b_err:
+        # Small delay so Alice's message arrives first
+        time.sleep(0.2)
+
+        try:
+            b_err = bob_error_check(bob, res_b, 'Alice')
+        except Exception as e:
+            print(f"[Bob] Error check crashed: {e}")
             abort['value'] = True
             return
         
+        if b_err:
+            abort['value'] = True
+            return
         print("Bob sifted key:  ", sifted_key)
 
     alice_thread = threading.Thread(target=alice_protocol)
@@ -69,11 +82,11 @@ def test_eve():
     alice_thread.join()
     bob_thread.join()
 
-    if abort['value']:
-        return "Aborted: error rate too high, possible eavesdropper."
-
     # stop timer after running threads
     end = time.time()
+
+    if abort['value']:
+        return "Aborted: error rate too high, possible eavesdropper."
 
     # Stop hosts
     alice.stop()
