@@ -38,7 +38,7 @@ def test_eve():
     def alice_protocol():
         alice_key, alice_bases = alice_transmit(alice, raw_len, 'Bob')
         keep = alice_receive_basis(alice, alice_bases, 'Bob')
-        sifted_key = alice_sift(alice_key, keep, res_a)
+        alice_sift(alice_key, keep, res_a)
 
         try:
             a_err = alice_error_check(alice, res_a, 'Bob')
@@ -55,7 +55,7 @@ def test_eve():
     def bob_protocol():
         bob_raw, bob_bases = bob_receive(bob, raw_len, 'Alice')
         bob_transmit_basis(bob, bob_bases, 'Alice')
-        sifted_key = bob_receive_and_sift(bob, bob_raw, 'Alice', res_b)
+        bob_receive_and_sift(bob, bob_raw, 'Alice', res_b)
 
         # Small delay so Alice's message arrives first
         time.sleep(0.2)
