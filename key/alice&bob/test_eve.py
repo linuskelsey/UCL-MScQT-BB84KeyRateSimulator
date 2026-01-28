@@ -28,6 +28,8 @@ def test_eve():
 
     network.add_hosts([alice, bob])
 
+    print("[NET] Network prepared and hosts added.")
+
     raw_len = 100
     res_a = []
     res_b = []
@@ -48,7 +50,7 @@ def test_eve():
         if a_err:
             abort['value'] = True
             return
-        print("\n----------\nAlice sifted key:", sifted_key, "\n----------")
+        print("\n----------\nAlice sifted key:", res_a, "\n----------")
 
     def bob_protocol():
         bob_raw, bob_bases = bob_receive(bob, raw_len, 'Alice')
@@ -68,7 +70,7 @@ def test_eve():
         if b_err:
             abort['value'] = True
             return
-        print("\n----------\nBob sifted key:  ", sifted_key, "\n----------")
+        print("\n----------\nBob sifted key:  ", res_b, "\n----------")
 
     alice_thread = threading.Thread(target=alice_protocol)
     bob_thread = threading.Thread(target=bob_protocol)
