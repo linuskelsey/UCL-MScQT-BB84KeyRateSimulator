@@ -7,7 +7,7 @@ def bob_error_check(bob_host,
     """
     Bob's reactive error-rate estimation using simple string protocol.
     """
-    print("[Bob] Waiting for Alice's error check request...")
+    print("\n[Bob] Waiting for Alice's error check request...")
 
     # Drain old messages first
     drained = []

@@ -3,6 +3,7 @@ def bob_receive_and_sift(bob, bob_measured, sender, results):
     keep = [False] * n
 
     seen = set()
+    print("\n[Bob] Receiving bits to keep...")
     while len(seen) < n:
         msgs = bob.get_classical(sender, wait=10)
         if not msgs:

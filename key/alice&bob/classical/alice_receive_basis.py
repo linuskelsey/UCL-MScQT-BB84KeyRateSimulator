@@ -4,6 +4,7 @@ def alice_receive_basis(alice, alice_bases, sender):
 
     # For each *index* we expect exactly one basis message from Bob
     seen = set()
+    print("\n[Alice] Receiving Bob's basis choices...")
     while len(seen) < n:
         msgs = alice.get_classical(sender, wait=10)
         if not msgs:
@@ -30,5 +31,6 @@ def alice_receive_basis(alice, alice_bases, sender):
 
             if len(seen) == n:
                 break
+    print("[Alice] Sharing bits to keep...")
 
     return keep

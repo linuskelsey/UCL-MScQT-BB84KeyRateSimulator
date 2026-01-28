@@ -5,6 +5,8 @@ def alice_transmit(alice, key_length, receiver):
     key = []
     bases = []
 
+    print("\n[Alice] Preparing and transmitting qubits...")
+
     for _ in range(key_length):
         # generate random bit and polarisation
         bit = random.randint(0,1)

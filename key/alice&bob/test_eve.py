@@ -13,6 +13,7 @@ from quantum.alice_transmit import alice_transmit
 from quantum.bob_receive import bob_receive
 
 def test_eve():
+    print("\n[NET] Setting up network instance...")
     network = Network.get_instance()
     network.start()
 
@@ -47,7 +48,7 @@ def test_eve():
         if a_err:
             abort['value'] = True
             return
-        print("Alice sifted key:", sifted_key)
+        print("\n----------\nAlice sifted key:", sifted_key, "\n----------")
 
     def bob_protocol():
         bob_raw, bob_bases = bob_receive(bob, raw_len, 'Alice')
@@ -67,7 +68,7 @@ def test_eve():
         if b_err:
             abort['value'] = True
             return
-        print("Bob sifted key:  ", sifted_key)
+        print("\n----------\nBob sifted key:  ", sifted_key, "\n----------")
 
     alice_thread = threading.Thread(target=alice_protocol)
     bob_thread = threading.Thread(target=bob_protocol)
@@ -98,7 +99,7 @@ def test_eve():
     if res_a != res_b:
         return "Aborted: key mismatch" # automate this in future
 
-    return f"Successful key transmission: {len(res_a)} bits at secure rate of {len(res_a) / (end - start)} bits per second."
+    return f"\nSuccessful key transmission: {len(res_a)} bits at secure rate of {round(len(res_a) / (end - start),3)} bits per second.\n"
 
 # needed for multiprocessing
 if __name__ == "__main__":

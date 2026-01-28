@@ -10,6 +10,7 @@ def alice_error_check(alice_host,
     """
     Alice's side of BB84 error-rate estimation using simple string protocol.
     """
+    print("\n[Alice] Preparing for error reconciliation...")
     n = len(key_bits)
     if n == 0:
         return True
@@ -46,7 +47,7 @@ def alice_error_check(alice_host,
         print(f"[Alice] Timeout waiting for Bob's response.")
         return True
     
-    print(f"[Alice] Received from Bob: '{payload_str}'")
+    print(f"\n[Alice] Received from Bob: '{payload_str}'")
     
     if not payload_str.startswith("ERR_RESP:"):
         print(f"[Alice] Expected ERR_RESP, got '{payload_str}'")
